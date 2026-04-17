@@ -146,32 +146,37 @@ your-project/
 
 ## Installation
 
-### Option 1 — Git Clone + Install Script (Recommended)
+### Windows (PowerShell)
 
-```bash
-# Clone the repo
-git clone https://github.com/hutchisonjohn/claude-code-md-system.git
+**One command — paste into PowerShell and press Enter:**
 
-# Run the installer
-cd claude-code-md-system
-chmod +x install.sh
-./install.sh
+```powershell
+git clone https://github.com/hutchisonjohn/claude-code-md-system.git "$env:TEMP\cc-system"; Set-Location "$env:TEMP\cc-system"; .\install.ps1
 ```
 
-### Option 2 — One-Liner
+Or step by step:
+```powershell
+git clone https://github.com/hutchisonjohn/claude-code-md-system.git "$env:TEMP\cc-system"
+Set-Location "$env:TEMP\cc-system"
+.\install.ps1
+```
+
+### macOS / Linux
+
+**One command — paste into Terminal and press Enter:**
 
 ```bash
 git clone https://github.com/hutchisonjohn/claude-code-md-system.git /tmp/cc-system && chmod +x /tmp/cc-system/install.sh && /tmp/cc-system/install.sh
 ```
 
-### Option 3 — Manual Copy
+### Manual Install (any platform)
 
 ```bash
 # Create the global commands directory if it doesn't exist
 mkdir -p ~/.claude/commands
 
 # Copy all command files
-cp claude-code-md-system/commands/cc-*.md ~/.claude/commands/
+cp /path/to/claude-code-md-system/commands/cc-*.md ~/.claude/commands/
 ```
 
 ### What Gets Installed
