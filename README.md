@@ -207,6 +207,130 @@ These become globally available as `/cc-*` slash commands in **every** Claude Co
 
 ---
 
+## Permissions & Settings (settings.json)
+
+### The safe way to give Claude the access it needs
+
+Claude Code asks for permission before running commands. You control exactly what it can and cannot do by configuring `settings.json` — either globally (`~/.claude/settings.json`) or per-project (`.claude/settings.json`).
+
+This is the right way to give Claude more access. **Do not use the nuclear option.**
+
+---
+
+### ⚠️ Never Do This
+
+```bash
+claude --dangerously-skip-permissions
+```
+
+This flag disables **all** permission checks. Claude can delete files, install packages, make network requests, read secrets — anything — without asking. It exists for isolated CI environments only. Using it on your local machine is like giving someone your house keys and telling them the safe combination. One bad prompt or confused agent loop can cause irreversible damage.
+
+**Use `settings.json` instead.** It takes two minutes and gives Claude exactly the access it needs — nothing more.
+
+---
+
+### The Recommended Starting Config
+
+Copy `settings.json.example` from this repo to `.claude/settings.json` in your project (or `~/.claude/settings.json` for global defaults):
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat:*)",
+      "Bash(ls:*)",
+      "Bash(npm run *)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Read(*)",
+      "Edit(*)",
+      "Write(*)"
+    ],
+    "deny": [
+      "Bash(npm install *)",
+      "Bash(npm uninstall *)",
+      "Bash(yarn add *)",
+      "Bash(pip install *)",
+      "Bash(rm *)",
+      "Bash(rm -rf *)",
+      "Bash(rmdir *)",
+      "Bash(curl *)",
+      "Bash(wget *)",
+      "Bash(ssh *)",
+      "Bash(scp *)",
+      "Read(.env)",
+      "Read(.env.*)",
+      "Read(**/secrets/*)",
+      "Read(**/*credential*)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)"
+    ]
+  }
+}
+```
+
+---
+
+### What This Config Does
+
+**Allowed without prompting:**
+
+| Permission | What it covers |
+|------------|---------------|
+| `Bash(cat:*)`, `Bash(ls:*)` | Reading files and listing directories |
+| `Bash(npm run *)` | Running scripts — dev server, tests, build, lint |
+| `Bash(git add/commit/status/diff/log)` | Core git operations |
+| `Read(*)`, `Edit(*)`, `Write(*)` | Reading, editing and writing files |
+
+**Always blocked:**
+
+| Permission | Why it's blocked |
+|------------|-----------------|
+| `npm install`, `yarn add`, `pip install` | Package changes should be deliberate — not automatic |
+| `rm`, `rm -rf`, `rmdir` | File deletion is irreversible |
+| `curl`, `wget`, `ssh`, `scp` | No unexpected network calls |
+| `.env`, `*.pem`, `*.key`, `*credential*` | Secrets and credentials are never readable |
+
+---
+
+### Customising for Your Project
+
+Add only what your workflow actually needs. Common additions:
+
+```json
+// Python projects
+"Bash(python *)",
+"Bash(pytest *)",
+
+// Docker
+"Bash(docker ps:*)",
+"Bash(docker logs:*)",
+
+// More git operations
+"Bash(git fetch:*)",
+"Bash(git pull:*)",
+"Bash(git push:*)"
+```
+
+Keep the deny list intact. Expand the allow list as needed — not the other way around.
+
+---
+
+### Global vs Project Settings
+
+| Location | Scope | Use for |
+|----------|-------|---------|
+| `~/.claude/settings.json` | Every project on your machine | Your personal defaults |
+| `.claude/settings.json` | This project only | Project-specific overrides |
+| `.claude/settings.local.json` | This project, not committed | Personal overrides on a team project |
+
+Project settings layer on top of global settings. The most specific setting wins.
+
+---
+
 ## Usage
 
 ### First Time on a New Project
@@ -354,19 +478,21 @@ New machine:   /cc-export → copy → /cc-import
 
 ```
 claude-code-md-system/
-├── README.md           ← You are here
-├── install.sh          ← Installer script
+├── README.md                ← You are here
+├── install.sh               ← macOS/Linux installer
+├── install.ps1              ← Windows PowerShell installer
+├── settings.json.example    ← Recommended permissions config (copy to .claude/)
 └── commands/
-    ├── cc-menu.md      ← Main numbered menu
-    ├── cc-setup.md     ← First-time project setup (10-question interview)
-    ├── cc-audit.md     ← Health check, severity reporting
-    ├── cc-fix.md       ← Auto-repair issues
-    ├── cc-refresh.md   ← End-of-session update
-    ├── cc-prune.md     ← Remove stale/unused content
-    ├── cc-export.md    ← Export setup to portable file
-    ├── cc-import.md    ← Import from export file (merge or replace)
-    ├── cc-guide.md     ← Generate full How To Use guide
-    └── cc-help.md      ← Quick reference cheat sheet in terminal
+    ├── cc-menu.md           ← Main numbered menu
+    ├── cc-setup.md          ← First-time project setup (10-question interview)
+    ├── cc-audit.md          ← Health check, severity reporting
+    ├── cc-fix.md            ← Auto-repair issues
+    ├── cc-refresh.md        ← End-of-session update
+    ├── cc-prune.md          ← Remove stale/unused content
+    ├── cc-export.md         ← Export setup to portable file
+    ├── cc-import.md         ← Import from export file (merge or replace)
+    ├── cc-guide.md          ← Generate full How To Use guide
+    └── cc-help.md           ← Quick reference cheat sheet in terminal
 ```
 
 ---
