@@ -203,7 +203,7 @@ These become globally available as `/cc-*` slash commands in **every** Claude Co
 
 - [Claude Code](https://claude.ai/code) installed
 - A `~/.claude/` directory (created automatically by Claude Code)
-- macOS, Linux, or Windows with Git Bash / WSL
+- macOS or Linux (for `install.sh`) / Windows PowerShell (for `install.ps1`)
 
 ---
 
