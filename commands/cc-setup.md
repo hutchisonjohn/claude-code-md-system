@@ -139,6 +139,11 @@ See docs/architecture.md
 
 ## Project Status
 See docs/project-status.md
+
+## Session Recovery
+On every session start, silently check for `docs/session-checkpoint.md`.
+If it exists and Status is IN_PROGRESS, say immediately:
+"⚡ Last session was interrupted — run `/cc-recover` to restore context."
 ```
 
 ### 2.2 — `.claude/rules/conventions.md`
@@ -323,7 +328,29 @@ Project just configured. Ready to begin development.
 ---
 ```
 
-### 2.9 — `CLAUDE.local.md` reminder
+### 2.9 — `docs/session-checkpoint.md`
+
+Create the initial checkpoint file:
+
+```markdown
+# Session Checkpoint
+> **Status:** COMPLETE
+> **Last saved:** [today's date]
+
+## Current Goal
+_No session in progress._
+
+## Recent Messages
+_none_
+
+## Files Modified
+_none_
+
+## Recent Activity
+_none_
+```
+
+### 2.10 — `CLAUDE.local.md` reminder
 
 Tell the user:
 ```
@@ -362,6 +389,7 @@ Files created:
   docs/architecture.md
   docs/project-status.md
   docs/changelog.md
+  docs/session-checkpoint.md
 
 Next steps:
   • Review CLAUDE.md and adjust the "Do NOT" section as you work

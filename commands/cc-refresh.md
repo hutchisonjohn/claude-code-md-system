@@ -52,17 +52,31 @@ If yes — add the new rule. If no — skip.
 
 ---
 
-## Step 5 — Completion Message
+## Step 5 — Mark Checkpoint Complete
+
+If `docs/session-checkpoint.md` exists, mark it as a clean session end:
+
+Find `**Status:** IN_PROGRESS` and change to `**Status:** COMPLETE`.
+Update the last saved timestamp to now.
+Remove the "To resume" line if present.
+
+This prevents the recovery prompt from triggering unnecessarily next session.
+
+---
+
+## Step 6 — Completion Message
 
 ```
 ✅ Session Refresh Complete
 ────────────────────────────
 Updated: docs/project-status.md
 Updated: docs/changelog.md
+Updated: docs/session-checkpoint.md (marked COMPLETE)
 [CLAUDE.md — updated / no changes needed]
 
 Next session: start with /cc-menu or just open the project.
 Claude will load docs/project-status.md automatically via CLAUDE.md.
+If anything was interrupted, run /cc-recover to restore context.
 ```
 
 ---

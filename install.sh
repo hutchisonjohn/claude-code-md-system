@@ -12,8 +12,10 @@
 set -e
 
 COMMANDS_DIR="$HOME/.claude/commands"
+HOOKS_DIR="$HOME/.claude/hooks"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SOURCE_DIR="$SCRIPT_DIR/commands"
+SOURCE_HOOKS_DIR="$SCRIPT_DIR/hooks"
 
 # ── Header ──────────────────────────────────────────────────
 echo ""
@@ -59,6 +61,14 @@ if [ "$existing" -gt 0 ]; then
     fi
 fi
 
+# ── Create ~/.claude/hooks/ if needed ────────────────────────
+if [ ! -d "$HOOKS_DIR" ]; then
+    echo "Creating $HOOKS_DIR ..."
+    mkdir -p "$HOOKS_DIR"
+    echo "  ✓ Directory created"
+    echo ""
+fi
+
 # ── Install commands ─────────────────────────────────────────
 echo "Installing commands to $COMMANDS_DIR ..."
 echo ""
@@ -69,6 +79,48 @@ for file in "$SOURCE_DIR"/cc-*.md; do
     echo "  ✓ $filename"
     count=$((count + 1))
 done
+
+# ── Install checkpoint hooks ──────────────────────────────────
+echo ""
+echo "Installing checkpoint hooks to $HOOKS_DIR ..."
+echo ""
+for file in "$SOURCE_HOOKS_DIR"/checkpoint-*.js; do
+    filename=$(basename "$file")
+    cp "$file" "$HOOKS_DIR/$filename"
+    echo "  ✓ $filename"
+done
+
+# ── Register hooks in ~/.claude/settings.json ────────────────
+echo ""
+echo "Registering hooks in ~/.claude/settings.json ..."
+node -e "
+const fs = require('fs'), os = require('os'), path = require('path');
+const settingsPath = path.join(os.homedir(), '.claude', 'settings.json');
+let s = {};
+try { s = JSON.parse(fs.readFileSync(settingsPath, 'utf8')); } catch {}
+if (!s.hooks) s.hooks = {};
+
+const hDir = path.join(os.homedir(), '.claude', 'hooks');
+const cmd = (f) => 'node \"' + path.join(hDir, f) + '\"';
+
+if (!s.hooks.UserPromptSubmit) s.hooks.UserPromptSubmit = [];
+if (!JSON.stringify(s.hooks.UserPromptSubmit).includes('checkpoint-prompt')) {
+  s.hooks.UserPromptSubmit.push({ hooks: [{ type: 'command', command: cmd('checkpoint-prompt.js') }] });
+}
+
+if (!s.hooks.PostToolUse) s.hooks.PostToolUse = [];
+if (!JSON.stringify(s.hooks.PostToolUse).includes('checkpoint-tool')) {
+  s.hooks.PostToolUse.push({ hooks: [{ type: 'command', command: cmd('checkpoint-tool.js'), timeout: 10 }] });
+}
+
+if (!s.hooks.Stop) s.hooks.Stop = [];
+if (!JSON.stringify(s.hooks.Stop).includes('checkpoint-stop')) {
+  s.hooks.Stop.push({ hooks: [{ type: 'command', command: cmd('checkpoint-stop.js') }] });
+}
+
+fs.writeFileSync(settingsPath, JSON.stringify(s, null, 2));
+console.log('  ✓ settings.json updated');
+" 2>/dev/null || echo "  ⚠ Could not update settings.json — add hooks manually (see README)"
 
 # ── Success ──────────────────────────────────────────────────
 echo ""
@@ -83,11 +135,18 @@ echo "  /cc-setup    First-time project setup (run once per project)"
 echo "  /cc-audit    Health check — report issues by severity"
 echo "  /cc-fix      Auto-repair CRITICAL and HIGH issues"
 echo "  /cc-refresh  End-of-session update (run every session)"
+echo "  /cc-recover  Restore context after crash or power failure"
 echo "  /cc-prune    Remove stale or unused content"
 echo "  /cc-export   Export setup to a portable file"
 echo "  /cc-import   Import from a claude-code-export.md file"
 echo "  /cc-guide    Open the full How To Use guide"
 echo "  /cc-help     Quick reference cheat sheet"
+echo ""
+echo "── Crash recovery ──────────────────────────────────────"
+echo ""
+echo "  Checkpoint hooks installed globally."
+echo "  Claude now saves context after every action."
+echo "  After a power failure: run /cc-recover to resume."
 echo ""
 echo "── Getting started ─────────────────────────────────────"
 echo ""
