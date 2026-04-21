@@ -19,8 +19,13 @@ Display the following quick reference exactly, then return to normal:
 ║  /cc-prune    Remove stale, vague or unused content          ║
 ║  /cc-export   Package setup into portable export file        ║
 ║  /cc-import   Load setup from a claude-code-export.md file   ║
-║  /cc-guide    Open the full How To Use guide as an MD file   ║
-║  /cc-help     Show this quick reference                      ║
+║  /cc-guide      Open the full How To Use guide as an MD file ║
+║  /cc-help       Show this quick reference                    ║
+║  /cc-recover    Restore context after crash / power failure  ║
+║  /cc-register   Add this project to global registry         ║
+║  /cc-projects   List all registered projects                 ║
+║  /cc-env-export  Export full environment to portable file    ║
+║  /cc-env-import  Restore environment on a new machine        ║
 ║                                                              ║
 ║  RECOMMENDED WORKFLOW                                        ║
 ║  ─────────────────────────────────────────────────────────  ║

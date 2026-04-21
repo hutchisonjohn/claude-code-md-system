@@ -52,7 +52,16 @@ If yes — add the new rule. If no — skip.
 
 ---
 
-## Step 5 — Mark Checkpoint Complete
+## Step 5 — Update Project Registry
+
+Check if `~/.claude/projects.md` exists and contains an entry for the current project path.
+
+- **If found:** update the `Last session` date to today.
+- **If not found:** mention it once — "This project isn't in your registry yet — run /cc-register to add it."
+
+---
+
+## Step 6 — Mark Checkpoint Complete
 
 If `docs/session-checkpoint.md` exists, mark it as a clean session end:
 

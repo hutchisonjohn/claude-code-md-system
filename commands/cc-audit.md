@@ -26,6 +26,11 @@ Check for the existence of each of these files and note which are present and wh
 - `docs/project-status.md`
 - `docs/changelog.md`
 
+**Checkpoint & Registry:**
+- `docs/session-checkpoint.md`
+- `~/.claude/projects.md` (global registry — check if this project is listed)
+- `~/.claude/hooks/checkpoint-prompt.js`, `checkpoint-tool.js`, `checkpoint-stop.js`
+
 **Also check:** any other files in `.claude/rules/`, `.claude/agents/`, `.claude/commands/`, `.claude/skills/`
 
 ---
@@ -67,6 +72,13 @@ For each check below, note any issues found with their severity.
 - [ ] **MISSING changelog.md** (LOW) — If absent, flag as missing
 - [ ] **STALE project-status.md** (MEDIUM) — Is project-status.md more than 7 days old without updates?
 - [ ] **EMPTY SECTIONS** (LOW) — Are any docs sections marked "To be documented" that should have content by now?
+
+### Checkpoint & Registry Checks
+- [ ] **MISSING CHECKPOINT** (MEDIUM) — `docs/session-checkpoint.md` not found. Run /cc-setup to create it.
+- [ ] **INTERRUPTED SESSION** (LOW) — checkpoint Status is IN_PROGRESS from a previous session. Run /cc-recover.
+- [ ] **NOT IN REGISTRY** (LOW) — project path not found in `~/.claude/projects.md`. Run /cc-register.
+- [ ] **CHECKPOINT HOOKS MISSING** (HIGH) — `~/.claude/hooks/checkpoint-*.js` files not found. Re-run installer to get crash recovery.
+- [ ] **HOOKS NOT IN SETTINGS** (HIGH) — `~/.claude/settings.json` has no checkpoint hook entries. Crash recovery will not work.
 
 ### Global vs Project Conflicts
 - [ ] **RULE CONFLICTS** (MEDIUM) — Does anything in project CLAUDE.md directly contradict ~/.claude/CLAUDE.md without an explicit override note?

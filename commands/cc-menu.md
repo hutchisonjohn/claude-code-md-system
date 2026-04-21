@@ -37,13 +37,27 @@ Display the following menu exactly, then wait for the user to select a number:
 ║  9. Help     Display quick command reference and         ║
 ║              cheat sheet in the terminal.                ║
 ║                                                          ║
-║  Also available as slash commands:                       ║
-║  /cc-setup  /cc-audit  /cc-fix  /cc-refresh              ║
-║  /cc-prune  /cc-export  /cc-import  /cc-guide  /cc-help  ║
+║  ── Recovery & Environment ───────────────────────────  ║
+║  10. Recover   Restore context after crash or power      ║
+║                failure. Reads session checkpoint.        ║
 ║                                                          ║
+║  11. Register  Add this project to your global           ║
+║                project registry.                         ║
+║                                                          ║
+║  12. Projects  List all registered projects and          ║
+║                their status across your machine.         ║
+║                                                          ║
+║  13. Env Export   Export full environment to a           ║
+║                   portable file (new machine setup).     ║
+║                                                          ║
+║  14. Env Import   Restore environment from export        ║
+║                   file on a new machine.                 ║
+║                                                          ║
+║  Also: /cc-recover /cc-register /cc-projects             ║
+║        /cc-env-export /cc-env-import                     ║
 ╚══════════════════════════════════════════════════════════╝
 
-Select an option (1-9):
+Select an option (1-14):
 ```
 
 Once the user selects:
@@ -57,7 +71,13 @@ Once the user selects:
 - 8 → Execute the Guide process (see /cc-guide instructions)
 - 9 → Execute the Help process (see /cc-help instructions)
 
-If the user types anything other than 1-7, display the menu again.
+- 10 → Execute the Recover process (see /cc-recover instructions)
+- 11 → Execute the Register process (see /cc-register instructions)
+- 12 → Execute the Projects process (see /cc-projects instructions)
+- 13 → Execute the Env Export process (see /cc-env-export instructions)
+- 14 → Execute the Env Import process (see /cc-env-import instructions)
+
+If the user types anything other than 1-14, display the menu again.
 
 ---
 
