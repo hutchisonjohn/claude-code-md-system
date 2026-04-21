@@ -234,22 +234,37 @@ Never consider an agent task complete without verifying its output.
 {
   "permissions": {
     "allow": [
-      "Bash(git status)",
-      "Bash(git diff *)",
-      "Bash(git log *)",
+      "Bash(cat *)",
+      "Bash(ls *)",
+      "Bash(npm run *)",
       "Bash(git add *)",
       "Bash(git commit *)",
-      "Bash(git checkout *)",
-      "Bash(git branch *)"
-    ],
-    "ask": [
-      "Bash(rm *)",
-      "Bash(git push *)",
-      "Bash(git reset *)"
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Read(*)",
+      "Edit(*)",
+      "Write(*)"
     ],
     "deny": [
-      "Bash(git push --force *)",
-      "Bash(git push -f *)"
+      "Bash(npm install *)",
+      "Bash(npm uninstall *)",
+      "Bash(yarn add *)",
+      "Bash(pip install *)",
+      "Bash(npx *)",
+      "Bash(rm *)",
+      "Bash(rmdir *)",
+      "Bash(curl *)",
+      "Bash(wget *)",
+      "Bash(ssh *)",
+      "Bash(git push --force*)",
+      "Bash(git reset --hard*)",
+      "Bash(git checkout -- *)",
+      "Read(.env)",
+      "Read(.env.*)",
+      "Read(**/secrets/*)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)"
     ]
   },
   "hooks": {
